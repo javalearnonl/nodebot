@@ -19,10 +19,24 @@ mongoose
 
 // Определение схемы и модели
 const ProductSchema = new mongoose.Schema({
+	name: {
+		en: String,
+		uk: String,
+		de: String,
+		pl: String,
+		hu: String,
+	},
+	description: {
+		en: String,
+		uk: String,
+		de: String,
+		pl: String,
+		hu: String,
+	},
 	id: Number,
-	name: String,
+
 	brand: String,
-	description: String,
+
 	photo: String,
 	price: String,
 	code: String,
