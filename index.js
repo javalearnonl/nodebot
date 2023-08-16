@@ -1,38 +1,64 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const MongoClient = require('mongodb').MongoClient
+const mongoose = require('mongoose')
 
 const app = express()
 const PORT = process.env.PORT || 3000
-const MONGO_URI =
-	'mongodb+srv://hixstore:4dFeK1zbgQGSHPZY@cluster0.rafsdqy.mongodb.net/?retryWrites=true&w=majority' // Замените на свою строку подключения
 
-let db
-let productsCollection
+// Подключение к MongoDB
+const MONGO_URI =
+	'mongodb+srv://hixstore:4dFeK1zbgQGSHPZY@cluster0.rafsdqy.mongodb.net/?retryWrites=true&w=majority'
+
+mongoose
+	.connect(MONGO_URI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
+	.then(() => console.log('Connected to MongoDB'))
+	.catch(err => console.error('Error connecting to MongoDB', err))
+
+// Определение схемы и модели
+const ProductSchema = new mongoose.Schema({
+	id: Number,
+	name: String,
+	brand: String,
+	description: String,
+	photo: String,
+	price: String,
+	code: String,
+	part: String,
+	// ... другие поля
+})
+
+const Product = mongoose.model('Product', ProductSchema)
 
 app.use(bodyParser.json())
 
-// Настройка соединения с MongoDB
-MongoClient.connect(MONGO_URI, { useUnifiedTopology: true }, (err, client) => {
-	if (err) throw err
-	db = client.db('YOUR_DB_NAME') // Замените на имя вашей базы данных
-	productsCollection = db.collection('products')
-})
-
-app.post('/api/addProduct', (req, res) => {
+// Добавление продукта
+app.post('/api/addProduct', async (req, res) => {
 	const productData = req.body
-	productsCollection.insertOne(productData, (err, result) => {
-		if (err) throw err
+	const newProduct = new Product(productData)
+
+	try {
+		await newProduct.save()
 		res.status(201).json({ message: 'Product added successfully' })
-	})
+	} catch (err) {
+		res.status(500).json({ error: 'Error adding product' })
+		console.error(err)
+	}
 })
 
-app.delete('/api/deleteProduct/:code', (req, res) => {
+// Удаление продукта
+app.delete('/api/deleteProduct/:code', async (req, res) => {
 	const codeToDelete = req.params.code
-	productsCollection.deleteOne({ code: codeToDelete }, (err, result) => {
-		if (err) throw err
+
+	try {
+		await Product.findOneAndDelete({ code: codeToDelete })
 		res.json({ message: 'Product deleted successfully' })
-	})
+	} catch (err) {
+		res.status(500).json({ error: 'Error deleting product' })
+		console.error(err)
+	}
 })
 
 app.listen(PORT, () => {
