@@ -48,6 +48,16 @@ const Product = mongoose.model('Product', ProductSchema)
 
 app.use(bodyParser.json())
 
+app.get('/api/products', async (req, res) => {
+	try {
+		const products = await Product.find()
+		res.json(products)
+	} catch (err) {
+		console.error('Ошибка при получении товаров:', err)
+		res.status(500).send('Ошибка на сервере')
+	}
+})
+
 // Добавление продукта
 app.post('/api/addProduct', async (req, res) => {
 	const productData = req.body
@@ -78,3 +88,5 @@ app.delete('/api/deleteProduct/:code', async (req, res) => {
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`)
 })
+const cors = require('cors')
+app.use(cors())
