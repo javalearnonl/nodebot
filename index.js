@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000
 
 // Подключение к MongoDB
 const MONGO_URI =
-	'mongodb+srv://hixstore:4dFeK1zbgQGSHPZY@cluster0.rafsdqy.mongodb.net/?retryWrites=true&w=majority'
+	'mongodb+srv://hixstore:Maksymovych1@cluster0.rafsdqy.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose
 	.connect(MONGO_URI, {
