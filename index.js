@@ -47,7 +47,20 @@ const ProductSchema = new mongoose.Schema({
 const Product = mongoose.model('Product', ProductSchema)
 
 app.use(bodyParser.json())
+app.get('/api/products/:id', async (req, res) => {
+	const productId = req.params.id
 
+	try {
+		const product = await Product.findOne({ id: productId })
+		if (!product) {
+			return res.status(404).json({ message: 'Product not found' })
+		}
+		res.json(product)
+	} catch (err) {
+		console.error('Ошибка при получении информации о продукте:', err)
+		res.status(500).send('Ошибка на сервере')
+	}
+})
 app.get('/api/products', async (req, res) => {
 	try {
 		const products = await Product.find()
