@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const app = express()
 const PORT = process.env.PORT || 3000
 
-// Подключение к MongoDB
 const MONGO_URI =
 	'mongodb+srv://hixstore:Maksymovych1@cluster0.rafsdqy.mongodb.net/?retryWrites=true&w=majority'
 
@@ -17,7 +16,6 @@ mongoose
 	.then(() => console.log('Connected to MongoDB'))
 	.catch(err => console.error('Error connecting to MongoDB', err))
 
-// Определение схемы и модели
 const ProductSchema = new mongoose.Schema({
 	name: {
 		en: String,
@@ -41,7 +39,6 @@ const ProductSchema = new mongoose.Schema({
 	price: String,
 	code: String,
 	part: String,
-	// ... другие поля
 })
 
 const Product = mongoose.model('Product', ProductSchema)
@@ -71,7 +68,6 @@ app.get('/api/products', async (req, res) => {
 	}
 })
 
-// Добавление продукта
 app.post('/api/addProduct', async (req, res) => {
 	const productData = req.body
 	const newProduct = new Product(productData)
@@ -85,7 +81,6 @@ app.post('/api/addProduct', async (req, res) => {
 	}
 })
 
-// Удаление продукта
 app.delete('/api/deleteProduct/:code', async (req, res) => {
 	const codeToDelete = req.params.code
 
