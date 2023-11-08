@@ -15,5 +15,8 @@
 		"fs": "^0.0.1-security",
 		"mongodb": "^5.7.0",
 		"mongoose": "^7.4.3"
+	},
+	"engines": {
+		"node": ">=14.20.1"
 	}
 }
